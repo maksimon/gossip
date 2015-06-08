@@ -10,7 +10,7 @@ const (
 
 type LispElement interface {
   Value() string
-  Type() int
+  Type() LispType
 }
 
 type LispPrimative struct {
@@ -38,12 +38,21 @@ type LispList struct {
   Children []LispElement
 }
 
-func (list *LispList) Value() string {
+func (list LispList) Value() string {
   return "(list)"
 }
 
-func (list *LispList) Type() LispType {
+func (list LispList) Type() LispType {
   return ListType
+}
+
+func (list *LispList) Append(element LispElement) {
+  list.Children = append(list.Children, element)
+ 
+}
+
+func (list *LispList) At (index int) LispElement {
+  return list.Children[index]
 }
 
 func NewList() *LispList {
