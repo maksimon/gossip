@@ -1,61 +1,76 @@
 package types
 
-type LispType int
+import (
+  "strconv"
+)
 
+type LispType int
 const (
   NumberType LispType = iota
   FunctionType LispType = iota 
-  ListType  LispType = iota
+  ListType LispType = iota
+  RuneType LispType = iota
 )
 
 type LispElement interface {
-  Value() string
+  Label() string
   Type() LispType
 }
 
 type LispPrimative struct {
-  value string
+  label string
   lispType LispType
 }
 
-func (LispPrimative *LispPrimative) Value() string {
-  return LispPrimative.value
+func NewRune(runeString string) * LispPrimative {
+  return &LispPrimative{ runeString, RuneType }
 }
 
-func (LispPrimative *LispPrimative) Type() LispType {
-  return LispPrimative.lispType
+func (primative *LispPrimative) Label() string {
+  return primative.label
 }
 
-func NewFunction(functionName string) *LispPrimative {
-  return &LispPrimative{functionName, FunctionType}
+func (primative *LispPrimative) Type() LispType {
+  return primative.lispType
 }
 
-func NewNumber(numberString string) *LispPrimative {
-  return &LispPrimative{numberString, NumberType}
+type LispNumber struct {
+  LispPrimative
+  value float64
+}
+
+func (number *LispNumber) Value() float64 {
+  return number.value;
+}
+
+func NewNumber(numberString string) *LispNumber {
+  numberValue, _ := strconv.ParseFloat(numberString, 64)
+  return &LispNumber{
+    LispPrimative{ numberString, NumberType },
+    numberValue,
+  }
 }
 
 type LispList struct {
+  LispPrimative
   Children []LispElement
-}
-
-func (list LispList) Value() string {
-  return "(list)"
-}
-
-func (list LispList) Type() LispType {
-  return ListType
 }
 
 func (list *LispList) Append(element LispElement) {
   list.Children = append(list.Children, element)
- 
 }
 
 func (list *LispList) At (index int) LispElement {
   return list.Children[index]
 }
 
-func NewList() *LispList {
-  return &LispList{ make([]LispElement, 0) }
+func (list *LispList) Length () int {
+  return len(list.Children);
 }
 
+func NewList() *LispList {
+  return &LispList { 
+    LispPrimative { "(list)" , ListType },
+    make([]LispElement, 0),
+  }
+}

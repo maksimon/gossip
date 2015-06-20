@@ -6,6 +6,7 @@ import(
 )
 
 var tokenRegexp *regexp.Regexp = regexp.MustCompile(`(\(|\)|[^() ]+)`)
+var numberRegexp *regexp.Regexp = regexp.MustCompile(`[0-9]+`);
 
 func ParseLisp(rawSource string) types.LispList {
   parsedSource := tokenRegexp.FindAllString(rawSource, -1)
@@ -19,14 +20,16 @@ func parseLispHelper(rawSource *[]string, cursor int) (*types.LispList, int) {
   var cursorValue string
   for {
     cursorValue = string((*rawSource)[cursor])
-    switch cursorValue {
+    switch {
       default:
+        retList.Append(types.NewRune(cursorValue))
+      case numberRegexp.MatchString(cursorValue):
          retList.Append(types.NewNumber(cursorValue))
-      case "(":
+      case cursorValue == "(":
         var child *types.LispList
         child, cursor = parseLispHelper(rawSource, cursor)
         retList.Append(child)
-      case ")":
+      case cursorValue == ")":
         return retList, cursor
     }
     cursor += 1
