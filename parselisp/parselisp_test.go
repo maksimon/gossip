@@ -5,9 +5,9 @@ import (
   "gossip/types"
 )
 
-func verifyLispElementValues (l []types.LispElement, v []string) bool {
+func verifyLispElementLabels (l []types.LispElement, v []string) bool {
   for i := 0 ; i < len(v) ; i++ {
-    if l[i].Value() != v[i] {
+    if l[i].Label() != v[i] {
       return false
     }
   }
@@ -24,9 +24,9 @@ func TestParseNumberList(t *testing.T) {
   success = (parsed.At(2).Type() == types.ListType )
   sublist := parsed.At(2).(*types.LispList)
 
-  success = verifyLispElementValues(parsed.Children[0:2] , []string{"1", "2"})
-  success = verifyLispElementValues(sublist.Children, []string{"8", "9", "10"})
-  success = verifyLispElementValues(parsed.Children[3:], []string{"3"})
+  success = verifyLispElementLabels(parsed.Children[0:2] , []string{"1", "2"})
+  success = verifyLispElementLabels(sublist.Children, []string{"8", "9", "10"})
+  success = verifyLispElementLabels(parsed.Children[3:], []string{"3"})
 
   if !success {
     t.Error("Fail")
