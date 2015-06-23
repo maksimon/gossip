@@ -6,9 +6,7 @@ import(
 )
 
 func eval(scope environment.Scope, element types.LispElement) types.LispElement {
-  if (types.IsPrimative(element.Type())) {
-    return element
-  }
+  ret := element
   if (element.Type() == types.RuneType) {
     return scope.Variables[element.Label()]
   }
@@ -17,12 +15,12 @@ func eval(scope environment.Scope, element types.LispElement) types.LispElement 
     if(listElement.At(0).Type() != types.RuneType) {
       return element
     }
-    function := listElement.At(0)
+    function := scope.Functions[listElement.At(0).Label()]
     args := types.NewList()
     for _ , val := range (element.(*types.LispList)).Children[1:] {
       args.Append(eval(scope,val))
     }
-    return scope.Functions[function.Label()](args.Children)
+    return function(args.Children)
   }
-  return nil
+  return ret
 }
