@@ -22,6 +22,13 @@ type LispPrimative struct {
   lispType LispType
 }
 
+func IsPrimative(inputType LispType) bool {
+  if (inputType == NumberType) {
+    return true;
+  }
+  return false
+}
+
 func NewRune(runeString string) * LispPrimative {
   return &LispPrimative{ runeString, RuneType }
 }
