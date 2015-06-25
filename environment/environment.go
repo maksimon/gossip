@@ -7,6 +7,7 @@ import (
 type Scope struct {
   Functions map[string] func([]types.LispElement) types.LispElement
   Variables map[string] types.LispElement
+  Parent *Scope
 }
 
 var GlobalScope Scope
@@ -21,5 +22,6 @@ func init() {
     },
     map[string] types.LispElement {
     },
+    nil,
   }
 }
