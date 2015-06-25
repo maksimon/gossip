@@ -13,10 +13,15 @@ func TestAritmethic(t *testing.T) {
   list.Append(six)
   list.Append(two)
 
-  sum        := GlobalScope.Functions["+"](list.Children).(*types.LispNumber)
-  difference := GlobalScope.Functions["-"](list.Children).(*types.LispNumber)
-  product    := GlobalScope.Functions["*"](list.Children).(*types.LispNumber)
-  quotient   := GlobalScope.Functions["/"](list.Children).(*types.LispNumber)
+  add, _      := GlobalScope.LookupFunction("+")
+  subtract, _ := GlobalScope.LookupFunction("-")
+  multiply, _ := GlobalScope.LookupFunction("*")
+  divide, _   := GlobalScope.LookupFunction("/")
+
+  sum        := add(list.Children).(*types.LispNumber)
+  difference := subtract(list.Children).(*types.LispNumber)
+  product    := multiply(list.Children).(*types.LispNumber)
+  quotient   := divide(list.Children).(*types.LispNumber)
 
 
   if !(sum.Label() == "8") || !(sum.Value() == 8) {
@@ -42,7 +47,7 @@ func TestVariableLookup(t *testing.T) {
     },
     &GlobalScope,
   }
-  GlobalScope.Variables["year"] = types.NewNumberFromValue(2015)
+  GlobalScope.AddVariable("year", types.NewNumberFromValue(2015))
   age, _ := lookup_scope.LookupVariable("age")
   year,_ := lookup_scope.LookupVariable("year")
   if age.Label() != "22" {
