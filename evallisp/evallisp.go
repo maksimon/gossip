@@ -3,24 +3,32 @@ package evallisp
 import(
   "gossip/types"
   "gossip/environment"
+  "fmt"
 )
 
 func eval(scope environment.Scope, element types.LispElement) types.LispElement {
   ret := element
   if (element.Type() == types.RuneType) {
-    return scope.Variables[element.Label()]
-  }
-  if (element.Type() == types.ListType) {
+    var ok bool
+    ret , ok = scope.LookupVariable(element.Label()) 
+    if !ok {
+      panic(fmt.Sprintf("Symbol not defined. Expecting variable, but found %s", ret.Label()))
+    }
+  } else if (element.Type() == types.ListType) {
+    var ok bool
     listElement := element.(*types.LispList)
     if(listElement.At(0).Type() != types.RuneType) {
       return element
     }
-    function := scope.Functions[listElement.At(0).Label()]
+    function, ok := scope.LookupFunction(listElement.At(0).Label())
+    if !ok {
+      panic(fmt.Sprintf("Symbol not defined. Expecting function, but found %s", ret.Label()))
+    }
     args := types.NewList()
     for _ , val := range (element.(*types.LispList)).Children[1:] {
       args.Append(eval(scope,val))
     }
-    return function(args.Children)
+    ret = function(args.Children)
   }
   return ret
 }
