@@ -29,6 +29,6 @@ func TestParseNumberList(t *testing.T) {
   success = verifyLispElementLabels(parsed.Children[3:], []string{"3"})
 
   if !success {
-    t.Error("Fail")
+    t.Error("cannot parse numbers")
   }
 }
