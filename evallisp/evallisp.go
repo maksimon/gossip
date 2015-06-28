@@ -15,9 +15,9 @@ func eval(scope environment.Scope, element types.LispElement) types.LispElement 
       panic(fmt.Sprintf("Symbol not defined. Expecting variable, but found %s", ret.Label()))
     }
   } else if (element.Type() == types.ListType) {
-    var ok bool
     listElement := element.(*types.LispList)
-    if(listElement.At(0).Type() != types.RuneType) {
+    var ok bool
+    if(listElement.Length() == 0 || listElement.At(0).Type() != types.RuneType) {
       return element
     }
     function, ok := scope.LookupFunction(listElement.At(0).Label())

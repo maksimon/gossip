@@ -24,7 +24,7 @@ func parseLispHelper(rawSource *[]string, cursor int) (*types.LispList, int) {
       default:
         retList.Append(types.NewRune(cursorValue))
       case cursorValue == "nil":
-        retList.Append(types.NewNil())
+        retList.Append(types.NewList())
       case numberRegexp.MatchString(cursorValue):
         retList.Append(types.NewNumberFromLabel(cursorValue))
       case cursorValue == "(":

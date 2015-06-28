@@ -13,7 +13,7 @@ func (list *LispList) At (index int) LispElement {
   return list.Children[index]
 }
 
-func (list *LispList) Length () int {
+func (list *LispList) Length() int {
   return len(list.Children);
 }
 
@@ -23,3 +23,4 @@ func NewList() *LispList {
     make([]LispElement, 0),
   }
 }
+

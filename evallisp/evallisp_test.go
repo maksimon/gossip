@@ -18,25 +18,18 @@ func TestEvalArithmetic(t * testing.T) {
 
 func TestIf(t * testing.T) {
   program := 
-  "(+"           +
-    "("          +
-      "if 1"   +
-        " 4"    +
-    ")"          +
-    "2"        + 
-    "("          +
-      "if nil" + 
-        " 1000" +
-        " 10"   +
-    ")"          +
-  ")"
+    "(+ 6"       +
+      "(if 1"    +
+        " 2"     +
+        " 1000"  +
+      ")"        +
+      "(if nil"  + 
+        " 1000"  +
+        " 10)"   +
+     ")"         
   parsed := parselisp.ParseLisp(program)
   program_value := eval(environment.GlobalScope, &parsed)
-  //program_value := parsed.At(2)
-  //if (program_value.Label() != "nil") {
-  //  t.Error(fmt.Sprintf("Using poppin fresh as an adjective %s", program_value.Label()))
-  //}
-  if (program_value.(*types.LispNumber)).Value() != 16 {
+  if (program_value.(*types.LispNumber)).Value() != 18 {
     t.Error("If does not work as expected")
   }
 }

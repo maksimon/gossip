@@ -24,11 +24,25 @@ func TestParseNumberList(t *testing.T) {
   success = (parsed.At(2).Type() == types.ListType )
   sublist := parsed.At(2).(*types.LispList)
 
-  success = verifyLispElementLabels(parsed.Children[0:2] , []string{"1", "2"})
-  success = verifyLispElementLabels(sublist.Children, []string{"8", "9", "10"})
-  success = verifyLispElementLabels(parsed.Children[3:], []string{"3"})
+  success = success && verifyLispElementLabels(parsed.Children[0:2] , []string{"1", "2"})
+  success = success && verifyLispElementLabels(sublist.Children, []string{"8", "9", "10"})
+  success = success && verifyLispElementLabels(parsed.Children[3:], []string{"3"})
 
   if !success {
     t.Error("cannot parse numbers")
+  }
+}
+
+func TestParseNil(t *testing.T) {
+  program := "(1 2 nil ())"
+  parsed := ParseLisp(program)
+  success := true
+
+  success = success && (parsed.At(0).Type() == types.NumberType)
+  success = success && (parsed.At(1).Type() == types.NumberType)
+  success = success && types.IsNil(parsed.At(2))
+
+  if !success {
+    t.Error("cannot parse nil")
   }
 }

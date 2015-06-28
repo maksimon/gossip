@@ -5,7 +5,6 @@ const (
   NumberType LispType = iota
   ListType LispType = iota
   RuneType LispType = iota
-  NilType LispType = iota
 )
 
 type LispElement interface {
@@ -16,13 +15,6 @@ type LispElement interface {
 type LispPrimative struct {
   label string
   lispType LispType
-}
-
-func IsPrimative(inputType LispType) bool {
-  if (inputType == NumberType) {
-    return true;
-  }
-  return false
 }
 
 func (primative *LispPrimative) Label() string {
