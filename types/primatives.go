@@ -3,9 +3,9 @@ package types
 type LispType int
 const (
   NumberType LispType = iota
-  FunctionType LispType = iota 
   ListType LispType = iota
   RuneType LispType = iota
+  NilType LispType = iota
 )
 
 type LispElement interface {

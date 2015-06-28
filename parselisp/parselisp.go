@@ -23,8 +23,10 @@ func parseLispHelper(rawSource *[]string, cursor int) (*types.LispList, int) {
     switch {
       default:
         retList.Append(types.NewRune(cursorValue))
+      case cursorValue == "nil":
+        retList.Append(types.NewNil())
       case numberRegexp.MatchString(cursorValue):
-         retList.Append(types.NewNumberFromLabel(cursorValue))
+        retList.Append(types.NewNumberFromLabel(cursorValue))
       case cursorValue == "(":
         var child *types.LispList
         child, cursor = parseLispHelper(rawSource, cursor)

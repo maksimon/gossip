@@ -13,6 +13,7 @@ func init() {
       "-" : Subtract,
       "*" : Multiply,
       "/" : Divide,
+      "if": If,
     },
     map[string] types.LispElement {
     },
