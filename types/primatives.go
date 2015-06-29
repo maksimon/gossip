@@ -5,6 +5,7 @@ const (
   NumberType LispType = iota
   ListType LispType = iota
   RuneType LispType = iota
+  FunctionType LispType = iota
 )
 
 type LispElement interface {

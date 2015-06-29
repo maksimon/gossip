@@ -1,6 +1,6 @@
 package evallisp
 
-import(
+import (
   "gossip/types"
   "gossip/environment"
   "fmt"
