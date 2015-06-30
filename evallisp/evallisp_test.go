@@ -16,7 +16,7 @@ func TestEvalArithmetic(t * testing.T) {
   }
 }
 
-func TestIf(t * testing.T) {
+func TestEvalIf(t * testing.T) {
   program := 
     "(+ 6"       +
       "(if 1"    +
@@ -31,5 +31,17 @@ func TestIf(t * testing.T) {
   program_value := eval(environment.GlobalScope, &parsed)
   if (program_value.(*types.LispNumber)).Value() != 18 {
     t.Error("If does not work as expected")
+  }
+}
+
+func TestDefun(t * testing.T) {
+  definition := parselisp.ParseLisp("(pxthree (x y) (* (+ x y) 3))")
+  args:=  parselisp.ParseLisp("(5 2)")
+
+  function:= defun(definition.Children, environment.GlobalScope)
+
+  result := function.Operate(args.Children)
+  if result.Label() != "21" {
+    t.Error("function declarations don't work")
   }
 }
