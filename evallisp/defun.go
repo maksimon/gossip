@@ -22,7 +22,6 @@ func defun(func_spec []types.LispElement, parent_scope *environment.Scope) *type
   }
   function := func(args []types.LispElement) types.LispElement {
     function_scope := environment.Scope {
-      map[string] func([]types.LispElement) types.LispElement{},
       map[string] types.LispElement{},
       parent_scope,
     }

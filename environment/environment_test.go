@@ -15,7 +15,7 @@ func TestControllFlow( t *testing.T) {
   ifArgs.Append(numberone)
   ifArgs.Append(numbertwo)
 
-  if If(ifArgs.Children).Label() != "2" {
+  if If.Operate(ifArgs.Children).Label() != "2" {
     t.Error("If does not branch correctly if its first argument is nil")
   }
   
@@ -24,7 +24,7 @@ func TestControllFlow( t *testing.T) {
   ifArgs.Append(numberone)
   ifArgs.Append(numbertwo)
 
-  if If(ifArgs.Children).Label() != "1" {
+  if If.Operate(ifArgs.Children).Label() != "1" {
     t.Error("If does not branch correctly if its first argument is not nil")
   }
 }
@@ -42,10 +42,10 @@ func TestAritmethic(t *testing.T) {
   multiply, _ := GlobalScope.LookupFunction("*")
   divide, _   := GlobalScope.LookupFunction("/")
 
-  sum        := add(list.Children).(*types.LispNumber)
-  difference := subtract(list.Children).(*types.LispNumber)
-  product    := multiply(list.Children).(*types.LispNumber)
-  quotient   := divide(list.Children).(*types.LispNumber)
+  sum        := add.Operate(list.Children).(*types.LispNumber)
+  difference := subtract.Operate(list.Children).(*types.LispNumber)
+  product    := multiply.Operate(list.Children).(*types.LispNumber)
+  quotient   := divide.Operate(list.Children).(*types.LispNumber)
 
 
   if !(sum.Label() == "8") || !(sum.Value() == 8) {
@@ -64,8 +64,6 @@ func TestAritmethic(t *testing.T) {
 
 func TestVariableLookup(t *testing.T) {
   lookup_scope := Scope {
-    map[string] func([]types.LispElement) types.LispElement{
-    },
     map[string] types.LispElement {
       "age" : types.NewNumberFromValue(22),
     },
@@ -84,10 +82,8 @@ func TestVariableLookup(t *testing.T) {
 
 func TestFunctionLookup(t * testing.T) {
   lookup_scope := Scope {
-    map[string] func([]types.LispElement) types.LispElement{
-      "-" : Subtract,
-    },
     map[string] types.LispElement {
+      "-" : Subtract,
     },
     &GlobalScope,
   }
@@ -100,8 +96,8 @@ func TestFunctionLookup(t * testing.T) {
   subtract, _ := lookup_scope.LookupFunction("-")
   multiply, _ := lookup_scope.LookupFunction("*")
 
-  difference := subtract(list.Children)
-  product := multiply(list.Children) 
+  difference := subtract.Operate(list.Children)
+  product := multiply.Operate(list.Children) 
 
   if !(difference.Label() == "4") {
     t.Error("local scope function lookup failed")

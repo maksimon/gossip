@@ -38,7 +38,7 @@ func TestDefun(t * testing.T) {
   definition := parselisp.ParseLisp("(pxthree (x y) (* (+ x y) 3))")
   args:=  parselisp.ParseLisp("(5 2)")
 
-  function:= defun(definition.Children, environment.GlobalScope)
+  function:= defun(definition.Children, &environment.GlobalScope)
 
   result := function.Operate(args.Children)
   if result.Label() != "21" {

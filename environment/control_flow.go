@@ -4,7 +4,7 @@ import (
   "gossip/types"
 )
 
-func If(input []types.LispElement) types.LispElement {
+func lispIf(input []types.LispElement) types.LispElement {
   if len(input) < 2 {
     panic("Error. Not enough arguments to 'if'");
   }
@@ -15,4 +15,10 @@ func If(input []types.LispElement) types.LispElement {
     return input[2]
   }
   return types.NewList()
+}
+
+var If *types.LispFunction
+
+func init() {
+  If = types.NewFunction(lispIf)
 }

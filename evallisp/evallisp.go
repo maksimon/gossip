@@ -28,7 +28,7 @@ func eval(scope environment.Scope, element types.LispElement) types.LispElement 
     for _ , val := range (element.(*types.LispList)).Children[1:] {
       args.Append(eval(scope,val))
     }
-    ret = function(args.Children)
+    ret = function.Operate(args.Children)
   }
   return ret
 }

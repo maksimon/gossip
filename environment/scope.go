@@ -5,23 +5,12 @@ import (
 )
 
 type Scope struct {
-  functions map[string] func([]types.LispElement) types.LispElement
-  variables map[string] types.LispElement
+  Variables map[string] types.LispElement
   Parent *Scope
 }
 
-func (scope *Scope) LookupFunction(label string) (func([]types.LispElement) types.LispElement, bool) {
-  ret, ret_exists := scope.functions[label]
-  if ret_exists {
-    return ret, true
-  }
-  if scope.Parent != nil {
-    return scope.Parent.LookupFunction(label)
-  }
-  return nil, false
-}
 func (scope *Scope) LookupVariable(label string) (types.LispElement, bool) {
-  ret, ret_exists := scope.variables[label]
+  ret, ret_exists := scope.Variables[label]
   if ret_exists {
     return ret, true
   }
@@ -30,10 +19,12 @@ func (scope *Scope) LookupVariable(label string) (types.LispElement, bool) {
   }
   return nil, false
 }
-func (scope *Scope) AddVariable(label string, value types.LispElement) {
-  scope.variables[label] = value
+
+func(scope *Scope) LookupFunction(label string) (*types.LispFunction, bool) {
+  ret, ret_exists := scope.LookupVariable(label)
+  return ret.(*types.LispFunction), ret_exists
 }
 
-func (scope *Scope) AddFunction(label string, value func([]types.LispElement) types.LispElement) {
-  scope.functions[label] = value 
+func (scope *Scope) AddVariable(label string, value types.LispElement) {
+  scope.Variables[label] = value
 }
