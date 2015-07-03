@@ -25,11 +25,8 @@ func eval(scope environment.Scope, element types.LispElement) types.LispElement 
     listElement := element.(*types.LispList)
     if listElement.Length() == 0 || listElement.At(0).Type() != types.RuneType {
       return element;
-    } else if (listElement.At(0).Label() == "iff") {
-      if (listElement.Length() < 2) {
-        panic("Improper if statement")
-      }
-      //test := listElement.At(1)
+    } else if (listElement.At(0).Label() == "if") {
+      return If(evalArgs(listElement.Children[1:]))
     } else if (listElement.At(0).Label() == "defun") {
       // defun stuff
     } else { //function stuff
