@@ -7,6 +7,13 @@ import (
 )
 
 func eval(scope environment.Scope, element types.LispElement) types.LispElement {
+	evalArgs := func(args []types.LispElement) []types.LispElement {
+	  eval_args := make([]types.LispElement, 0)
+	  for _, val := range(args) {
+      eval_args = append(eval_args,eval(scope,val))
+	  }
+	  return eval_args
+	}
   ret := element
   if (element.Type() == types.RuneType) {
     var ok bool
@@ -16,19 +23,24 @@ func eval(scope environment.Scope, element types.LispElement) types.LispElement 
     }
   } else if (element.Type() == types.ListType) {
     listElement := element.(*types.LispList)
-    var ok bool
-    if(listElement.Length() == 0 || listElement.At(0).Type() != types.RuneType) {
-      return element
+    if listElement.Length() == 0 || listElement.At(0).Type() != types.RuneType {
+      return element;
+    } else if (listElement.At(0).Label() == "iff") {
+      if (listElement.Length() < 2) {
+        panic("Improper if statement")
+      }
+      //test := listElement.At(1)
+    } else if (listElement.At(0).Label() == "defun") {
+      // defun stuff
+    } else { //function stuff
+	    var ok bool
+	    function, ok := scope.LookupFunction(listElement.At(0).Label())
+	    if !ok {
+	      panic(fmt.Sprintf("Symbol not defined. Expecting function, but found %s", ret.Label()))
+	    }
+	    return function.Operate(evalArgs(listElement.Children[1:]));
     }
-    function, ok := scope.LookupFunction(listElement.At(0).Label())
-    if !ok {
-      panic(fmt.Sprintf("Symbol not defined. Expecting function, but found %s", ret.Label()))
-    }
-    args := types.NewList()
-    for _ , val := range (element.(*types.LispList)).Children[1:] {
-      args.Append(eval(scope,val))
-    }
-    ret = function.Operate(args.Children)
   }
   return ret
 }
+
