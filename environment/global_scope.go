@@ -13,7 +13,6 @@ func init() {
       "-" : Subtract,
       "*" : Multiply,
       "/" : Divide,
-      "if": If,
     },
     nil,
   }

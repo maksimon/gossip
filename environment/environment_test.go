@@ -5,30 +5,6 @@ import (
   "gossip/types"
 )
 
-func TestControllFlow( t *testing.T) {
-  numberone := types.NewNumberFromValue(1)
-  numbertwo := types.NewNumberFromValue(2)
-  nillist := types.NewList()
-
-  ifArgs := types.NewList()
-  ifArgs.Append(nillist)
-  ifArgs.Append(numberone)
-  ifArgs.Append(numbertwo)
-
-  if If.Operate(ifArgs.Children).Label() != "2" {
-    t.Error("If does not branch correctly if its first argument is nil")
-  }
-  
-  ifArgs = types.NewList()
-  ifArgs.Append(numberone)
-  ifArgs.Append(numberone)
-  ifArgs.Append(numbertwo)
-
-  if If.Operate(ifArgs.Children).Label() != "1" {
-    t.Error("If does not branch correctly if its first argument is not nil")
-  }
-}
-
 func TestAritmethic(t *testing.T) {
   six := types.NewNumberFromLabel("6")
   two := types.NewNumberFromLabel("2")
