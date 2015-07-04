@@ -3,6 +3,7 @@ package environment
 import (
   "testing"
   "gossip/types"
+  "fmt"
 )
 
 func TestAritmethic(t *testing.T) {
@@ -38,6 +39,83 @@ func TestAritmethic(t *testing.T) {
   }
 }
 
+func TestBoolean(t *testing.T) {
+  equal, _      := GlobalScope.LookupFunction("=")
+  greater_than, _ := GlobalScope.LookupFunction(">")
+  greater_than_equal, _ := GlobalScope.LookupFunction(">=")
+  less_than, _   := GlobalScope.LookupFunction("<")
+  less_than_equal, _   := GlobalScope.LookupFunction("<=")
+
+  test_bools_on_list := func(list_to_test []types.LispElement, expected_results []bool) (bool, int) {
+    test_results := []bool{
+	     (equal.Operate(list_to_test).Label() == "1"),
+	     (greater_than.Operate(list_to_test).Label() == "1"),
+	     (greater_than_equal.Operate(list_to_test).Label() == "1"),
+	     (less_than.Operate(list_to_test).Label() == "1"),
+	     (less_than_equal.Operate(list_to_test).Label() == "1"),
+    }
+    for i := range expected_results {
+      if test_results[i] != expected_results[i] {
+        return false, i
+      }
+    }
+    return true, -1 
+  }
+  var test_result bool
+  var failure_index int 
+
+  test_result, failure_index = test_bools_on_list([]types.LispElement{
+    types.NewNumberFromValue(2),
+    types.NewNumberFromValue(2),
+    types.NewNumberFromValue(2),
+  }, 
+  []bool{true,false,true,false,true})
+  if !test_result {
+    t.Error(fmt.Sprintf("the %d(st/nd/rd/th) bool function tested didnt work on equal numbers", failure_index))
+  }
+
+  test_result, failure_index = test_bools_on_list([]types.LispElement{
+    types.NewNumberFromValue(2),
+    types.NewNumberFromValue(5),
+    types.NewNumberFromValue(9),
+  }, 
+  []bool{false,true,true,false,false})
+  if !test_result {
+    t.Error(fmt.Sprintf("the %d(st/nd/rd/th) bool function tested didnt work on strictly increasing numbers", failure_index))
+  }
+
+  test_result, failure_index = test_bools_on_list([]types.LispElement{
+    types.NewNumberFromValue(2),
+    types.NewNumberFromValue(5),
+    types.NewNumberFromValue(5),
+  }, 
+  []bool{false,false,true,false,false})
+  if !test_result {
+    t.Error(fmt.Sprintf("the %d(st/nd/rd/th) bool function tested didnt work on increasing numbers", failure_index))
+  }
+
+  test_result, failure_index = test_bools_on_list([]types.LispElement{
+    types.NewNumberFromValue(9),
+    types.NewNumberFromValue(5),
+    types.NewNumberFromValue(2),
+  }, 
+  []bool{false,false,false,true,true})
+  if !test_result {
+    t.Error(fmt.Sprintf("the %d(st/nd/rd/th) bool function tested didnt work on strictly decreasing numbers", failure_index))
+  }
+
+  test_result, failure_index = test_bools_on_list([]types.LispElement{
+    types.NewNumberFromValue(9),
+    types.NewNumberFromValue(5),
+    types.NewNumberFromValue(5),
+  }, 
+  []bool{false,false,false,false,true})
+  if !test_result {
+    t.Error(fmt.Sprintf("the %d(st/nd/rd/th) bool function tested didnt work on decreasing numbers", failure_index))
+  }
+
+}
+
 func TestVariableLookup(t *testing.T) {
   lookup_scope := Scope {
     map[string] types.LispElement {
@@ -59,7 +137,7 @@ func TestVariableLookup(t *testing.T) {
 func TestFunctionLookup(t * testing.T) {
   lookup_scope := Scope {
     map[string] types.LispElement {
-      "-" : Subtract,
+      "-" : types.NewFunction(subtract),
     },
     &GlobalScope,
   }

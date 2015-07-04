@@ -6,7 +6,7 @@ import (
   "fmt"
 )
 
-func defun(func_spec []types.LispElement, parent_scope *environment.Scope) *types.LispFunction {
+func defun(func_spec []types.LispElement, parent_scope *environment.Scope) (string, *types.LispFunction) {
   function_name := func_spec[0].(*types.LispPrimative)
   function_arguments := func_spec[1].(*types.LispList)
   function_contents := func_spec[2].(*types.LispList)
@@ -31,7 +31,7 @@ func defun(func_spec []types.LispElement, parent_scope *environment.Scope) *type
     return eval(function_scope, function_contents)
   }
 
-  return types.NewFunction(function)
+  return function_name.Label(), types.NewFunction(function)
 }
 
 func validFunctionName(name_element types.LispElement) bool {

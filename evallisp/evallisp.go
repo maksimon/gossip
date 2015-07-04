@@ -23,13 +23,18 @@ func eval(scope environment.Scope, element types.LispElement) types.LispElement 
     }
   } else if (element.Type() == types.ListType) {
     listElement := element.(*types.LispList)
-    if listElement.Length() == 0 || listElement.At(0).Type() != types.RuneType {
+    if listElement.Length() == 0 {
       return element;
+    } else if (listElement.At(0).Label() == "quote") {
+      return quote(listElement.At(1), scope)
     } else if (listElement.At(0).Label() == "if") {
-      return If(evalArgs(listElement.Children[1:]))
+      return If(listElement.Children[1:], &scope)
     } else if (listElement.At(0).Label() == "defun") {
-      // defun stuff
-    } else { //function stuff
+      defun_spec := listElement.At(1).(*types.LispList)
+      function_name, function_def := defun(defun_spec.Children, &scope)
+      scope.AddVariable(function_name,function_def)
+      return function_def
+    } else { //function stuff 
 	    var ok bool
 	    function, ok := scope.LookupFunction(listElement.At(0).Label())
 	    if !ok {

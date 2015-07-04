@@ -24,3 +24,10 @@ func NewList() *LispList {
   }
 }
 
+func NewListFromElements(elements []LispElement) *LispList {
+  return &LispList {
+    LispPrimative { "(list)", ListType },
+    elements,
+  }
+}
+

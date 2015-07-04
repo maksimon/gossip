@@ -32,15 +32,3 @@ func divide(input []types.LispElement) types.LispElement {
   }
   return types.NewNumberFromValue(sum)
 }
-
-var Add *types.LispFunction
-var Subtract *types.LispFunction
-var Multiply *types.LispFunction
-var Divide *types.LispFunction
-
-func init() {
-	Add = types.NewFunction(add)
-	Subtract = types.NewFunction(subtract)
-	Multiply = types.NewFunction(multiply)
-	Divide = types.NewFunction(divide)
-}
