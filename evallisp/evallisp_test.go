@@ -68,7 +68,25 @@ func TestEvalDefun(t * testing.T) {
   }
 }
 
-func TestRecursiveDefun(t * testing.T) {
+func TestEvalSet(t *testing.T) {
+  program :=
+    "(quote ("        +
+      "(set max 711)" +
+      "(+ max 10)"    +
+      "(set max 200)" +
+      "(+ max 1)"     +
+    "))"
+  parsed := parselisp.ParseLisp(program)
+  evaled_program := eval(environment.GlobalScope, &parsed).(*types.LispList)
+  if evaled_program.At(1).Label() != "721" {
+    t.Error("set does not work")
+  }
+  if evaled_program.At(3).Label() != "201" {
+    t.Error("set does not work: cannot reset variable")
+  }
+}
+
+func TestRecursiveDefun(t *testing.T) {
   program :=
     "(quote ("                                    +
       "(defun (fib (n sec fst)"                   +

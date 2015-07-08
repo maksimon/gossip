@@ -29,6 +29,14 @@ func eval(scope environment.Scope, element types.LispElement) types.LispElement 
       return quote(listElement.At(1), scope)
     } else if (listElement.At(0).Label() == "if") {
       return If(listElement.Children[1:], &scope)
+    } else if (listElement.At(0).Label() == "set") {
+      if (listElement.At(1).Type() == types.RuneType && listElement.Length() >= 2) {
+        var_name  := listElement.At(1).Label()
+        var_value := eval(scope, listElement.At(2))
+        scope.AddVariable(var_name,var_value)
+      } else {
+        panic("Improperly formatted set")
+      }
     } else if (listElement.At(0).Label() == "defun") {
       defun_spec := listElement.At(1).(*types.LispList)
       function_name, function_def := defun(defun_spec.Children, &scope)
