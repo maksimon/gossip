@@ -13,7 +13,7 @@ func init() {
       "-" : types.NewFunction(subtract),
       "*" : types.NewFunction(multiply),
       "/" : types.NewFunction(divide),
-      "=" : types.NewFunction(equals),
+      "=": types.NewFunction(equals),
       ">" : types.NewFunction(greaterThan),
       ">=": types.NewFunction(greaterThanEquals),
       "<" : types.NewFunction(lessThan),

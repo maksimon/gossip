@@ -50,7 +50,7 @@ func lessThan(input []types.LispElement) types.LispElement {
 func lessThanEquals(input []types.LispElement) types.LispElement {
   curValue := (input[0].(*types.LispNumber)).Value()
   for _, val := range input[1:] {
-    if (val.(*types.LispNumber)).Value() > curValue {
+    if curValue > (val.(*types.LispNumber)).Value() {
       return types.NewList()
     }
     curValue = (val.(*types.LispNumber)).Value()

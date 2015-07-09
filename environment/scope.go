@@ -2,6 +2,7 @@ package environment
 
 import (
   "gossip/types"
+  "fmt"
 )
 
 type Scope struct {
@@ -25,6 +26,20 @@ func(scope *Scope) LookupFunction(label string) (*types.LispFunction, bool) {
   return ret.(*types.LispFunction), ret_exists
 }
 
+func (scope *Scope) SetVariable(label string, value types.LispElement) {
+  _, var_exists := scope.Variables[label]
+  if var_exists {
+    scope.Variables[label] = value
+  } else if (scope.Parent != nil) {
+    scope.Parent.SetVariable(label, value)
+  } else {
+    panic(fmt.Sprintf("variable with label %s does not exist", label))
+  }
+}
+
 func (scope *Scope) AddVariable(label string, value types.LispElement) {
-  scope.Variables[label] = value
+  _, var_exists := scope.LookupVariable(label)
+  if !var_exists {
+    scope.Variables[label] = value
+  }
 }

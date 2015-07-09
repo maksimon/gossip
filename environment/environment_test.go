@@ -79,7 +79,7 @@ func TestBoolean(t *testing.T) {
     types.NewNumberFromValue(5),
     types.NewNumberFromValue(9),
   }, 
-  []bool{false,true,true,false,false})
+  []bool{false,false,false,true,true})
   if !test_result {
     t.Error(fmt.Sprintf("the %d(st/nd/rd/th) bool function tested didnt work on strictly increasing numbers", failure_index))
   }
@@ -89,7 +89,7 @@ func TestBoolean(t *testing.T) {
     types.NewNumberFromValue(5),
     types.NewNumberFromValue(5),
   }, 
-  []bool{false,false,true,false,false})
+  []bool{false,false,false,false,true})
   if !test_result {
     t.Error(fmt.Sprintf("the %d(st/nd/rd/th) bool function tested didnt work on increasing numbers", failure_index))
   }
@@ -99,7 +99,7 @@ func TestBoolean(t *testing.T) {
     types.NewNumberFromValue(5),
     types.NewNumberFromValue(2),
   }, 
-  []bool{false,false,false,true,true})
+  []bool{false,true,true,false,false})
   if !test_result {
     t.Error(fmt.Sprintf("the %d(st/nd/rd/th) bool function tested didnt work on strictly decreasing numbers", failure_index))
   }
@@ -109,7 +109,7 @@ func TestBoolean(t *testing.T) {
     types.NewNumberFromValue(5),
     types.NewNumberFromValue(5),
   }, 
-  []bool{false,false,false,false,true})
+  []bool{false,false,true,false,false})
   if !test_result {
     t.Error(fmt.Sprintf("the %d(st/nd/rd/th) bool function tested didnt work on decreasing numbers", failure_index))
   }
