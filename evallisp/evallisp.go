@@ -25,26 +25,33 @@ func eval(scope environment.Scope, element types.LispElement) types.LispElement 
     listElement := element.(*types.LispList)
     if listElement.Length() == 0 {
       return element;
-    } else if (listElement.At(0).Label() == "quote") {
+    }
+    list_leader := listElement.At(0).Label()
+    if (list_leader == "quote") {
       return quote(listElement.At(1), scope)
-    } else if (listElement.At(0).Label() == "if") {
+    } else if (list_leader == "if") {
       return If(listElement.Children[1:], &scope)
-    } else if (listElement.At(0).Label() == "set") {
+    } else if (list_leader == "def" || list_leader == "set") {
       if (listElement.At(1).Type() == types.RuneType && listElement.Length() >= 2) {
         var_name  := listElement.At(1).Label()
         var_value := eval(scope, listElement.At(2))
-        scope.AddVariable(var_name,var_value)
+        if list_leader == "def" {
+          scope.AddVariable(var_name,var_value)
+        }
+        if list_leader == "set" {
+          scope.SetVariable(var_name,var_value)
+        }
       } else {
         panic("Improperly formatted set")
       }
-    } else if (listElement.At(0).Label() == "defun") {
+    } else if (list_leader == "defun") {
       defun_spec := listElement.At(1).(*types.LispList)
       function_name, function_def := defun(defun_spec.Children, &scope)
       scope.AddVariable(function_name,function_def)
       return function_def
     } else { //function stuff 
 	    var ok bool
-	    function, ok := scope.LookupFunction(listElement.At(0).Label())
+	    function, ok := scope.LookupFunction(list_leader)
 	    if !ok {
 	      panic(fmt.Sprintf("Symbol not defined. Expecting function, but found %s", ret.Label()))
 	    }

@@ -68,10 +68,10 @@ func TestEvalDefun(t * testing.T) {
   }
 }
 
-func TestEvalSet(t *testing.T) {
+func TestEvalDefSet(t *testing.T) {
   program :=
     "(quote ("        +
-      "(set max 711)" +
+      "(def max 711)" +
       "(+ max 10)"    +
       "(set max 200)" +
       "(+ max 1)"     +
