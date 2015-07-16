@@ -22,40 +22,44 @@ func eval(scope environment.Scope, element types.LispElement) types.LispElement 
       panic(fmt.Sprintf("Symbol not defined. Expecting variable, but found %s", ret.Label()))
     }
   } else if (element.Type() == types.ListType) {
-    listElement := element.(*types.LispList)
-    if listElement.Length() == 0 {
+    list_element := element.(*types.LispList)
+    if list_element.Length() == 0 {
       return element;
     }
-    list_leader := listElement.At(0).Label()
-    if (list_leader == "quote") {
-      return quote(listElement.At(1), scope)
-    } else if (list_leader == "if") {
-      return If(listElement.Children[1:], &scope)
-    } else if (list_leader == "def" || list_leader == "set") {
-      if (listElement.At(1).Type() == types.RuneType && listElement.Length() >= 2) {
-        var_name  := listElement.At(1).Label()
-        var_value := eval(scope, listElement.At(2))
-        if list_leader == "def" {
+    leader_label := list_element.At(0).Label()
+    if (leader_label == "quote") {
+      return quote(list_element.At(1), scope)
+    } else if (leader_label == "if") {
+      return If(list_element.Children[1:], &scope)
+    } else if (leader_label == "def" || leader_label == "set") {
+      if (list_element.At(1).Type() == types.RuneType && list_element.Length() >= 2) {
+        var_name  := list_element.At(1).Label()
+        var_value := eval(scope, list_element.At(2))
+        if leader_label == "def" {
           scope.AddVariable(var_name,var_value)
         }
-        if list_leader == "set" {
+        if leader_label == "set" {
           scope.SetVariable(var_name,var_value)
         }
       } else {
-        panic("Improperly formatted set")
+        panic(fmt.Sprintf("Improperly formatted set. Label was (%s)", leader_label))
       }
-    } else if (list_leader == "defun") {
-      defun_spec := listElement.At(1).(*types.LispList)
-      function_name, function_def := defun(defun_spec.Children, &scope)
-      scope.AddVariable(function_name,function_def)
+    } else if (leader_label == "lambda") {
+	    function_arguments := list_element.At(1).(*types.LispList)
+	    function_contents  := list_element.At(2).(*types.LispList)
+	    function_def := lambda(
+        function_arguments,
+        function_contents,
+        &scope,
+      )
       return function_def
     } else { //function stuff 
 	    var ok bool
-	    function, ok := scope.LookupFunction(list_leader)
+	    function, ok := scope.LookupFunction(leader_label)
 	    if !ok {
 	      panic(fmt.Sprintf("Symbol not defined. Expecting function, but found %s", ret.Label()))
 	    }
-	    return function.Operate(evalArgs(listElement.Children[1:]));
+	    return function.Operate(evalArgs(list_element.Children[1:]));
     }
   }
   return ret
