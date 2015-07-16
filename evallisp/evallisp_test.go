@@ -52,22 +52,6 @@ func TestQuote(t * testing.T) {
   }
 }
 
-//func TestEvalDefun(t * testing.T) {
-//  program :=
-//	  "(quote ("                  +
-//	    "(defun (pxthree (x y)"   +
-//	      "(* (+ x y) 3)))"       +
-//      "(defun (tryagain (x y)"  +
-//        "(+ (pxthree x y) 2)))" +
-//	    "(+ 4 (tryagain 3 4))"    +
-//	  "))"
-//  parsed := parselisp.ParseLisp(program)
-//  evaled_program := eval(environment.GlobalScope, &parsed).(*types.LispList)
-//  if evaled_program.At(2).Label() != "27" {
-//    t.Error(fmt.Sprintf("cannot defun. Got %s", evaled_program.At(2).Label()))
-//  }
-//}
-
 func TestEvalDefSet(t *testing.T) {
   program :=
     "(quote ("        +
@@ -116,18 +100,6 @@ func TestRecursiveLambda(t *testing.T) {
     t.Error(fmt.Sprintf("cannot recursivly defun. Got %s", evaled_program.At(1).Label()))
   }
 }
-//
-//func TestDefun(t * testing.T) {
-//  definition := parselisp.ParseLisp("(pxthree (x y) (* (+ x y) 3))")
-//  args:=  parselisp.ParseLisp("(5 2)")
-//
-//  function_name, function:= lambda(definition.Children, &environment.GlobalScope)
-//
-//  result := function.Operate(args.Children)
-//  if result.Label() != "21" || function_name != "pxthree" {
-//    t.Error("function declarations don't work")
-//  }
-//}
 
 func TestLambda(t * testing.T) {
   function_args := parselisp.ParseLisp("(x y)")
